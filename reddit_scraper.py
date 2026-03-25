@@ -10,7 +10,7 @@ def clean_text(text):
     text = ' '.join(text.split())
     return text.strip()
 
-def get_top_story(subreddit_name="nosleep", time_filter="day", min_length=300, max_length=950):
+def get_top_story(subreddit_name="nosleep", time_filter="day", min_length=50, max_length=950):
     """Fetches the top story from a public subreddit without needing API keys."""
     print(f"Fetching top stories from r/{subreddit_name} ({time_filter})...")
     url = f"https://www.reddit.com/r/{subreddit_name}/top.json?t={time_filter}&limit=100"
@@ -47,7 +47,7 @@ def get_top_story(subreddit_name="nosleep", time_filter="day", min_length=300, m
                     "url": f"https://reddit.com{post_data.get('permalink', '')}"
                 }
                 
-        print("No suitable story found in the first 25 posts.")
+        print(f"No suitable story found analyzing {len(posts)} posts.")
         return None
         
     except Exception as e:
