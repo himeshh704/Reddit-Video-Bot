@@ -1,6 +1,19 @@
 import urllib.request
 import json
 import re
+import os
+
+SEEN_FILE = os.path.join(os.path.dirname(__file__), "seen_stories.txt")
+
+def load_seen_stories():
+    if not os.path.exists(SEEN_FILE):
+        return set()
+    with open(SEEN_FILE, 'r', encoding='utf-8') as f:
+        return set(line.strip() for line in f.readlines())
+
+def mark_story_seen(post_id):
+    with open(SEEN_FILE, 'a', encoding='utf-8') as f:
+        f.write(f"{post_id}\n")
 
 def clean_text(text):
     """Cleans the reddit post text for TTS consumption."""
@@ -14,6 +27,7 @@ def get_top_story(subreddit_name="nosleep", time_filter="day", min_length=50, ma
     """Fetches the top story from a public subreddit without needing API keys."""
     print(f"Fetching top stories from r/{subreddit_name} ({time_filter})...")
     url = f"https://www.reddit.com/r/{subreddit_name}/top.json?t={time_filter}&limit=100"
+    seen_ids = load_seen_stories()
     
     # We use a standard web browser User-Agent so Reddit lets us read the public page
     req = urllib.request.Request(
@@ -29,14 +43,17 @@ def get_top_story(subreddit_name="nosleep", time_filter="day", min_length=50, ma
         
         for post in posts:
             post_data = post['data']
-            # We only want text posts that are not stickied
-            if not post_data.get('is_self') or post_data.get('stickied'):
+            post_id = post_data.get('id', '')
+            
+            # We only want text posts that are not stickied and not already processed
+            if not post_data.get('is_self') or post_data.get('stickied') or post_id in seen_ids:
                 continue
             
             selftext = post_data.get('selftext', '')
             text_length = len(selftext)
             
             if min_length <= text_length <= max_length:
+                mark_story_seen(post_id)
                 title = post_data.get('title', 'Unknown')
                 print(f"Selected story: {title} (Length: {text_length})")
                 
