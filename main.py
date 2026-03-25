@@ -24,7 +24,13 @@ def main():
         
     # 2. Scrape Story
     print("\n--- STEP 1: Scraping Reddit Story ---")
-    story = get_top_story(subreddit_name="TwoSentenceHorror", time_filter="month", min_length=50, max_length=950) # Very short Shorts
+    # We want a story between 600 and 950 characters to guarantee a 45-60 second video.
+    subreddits = ["confessions", "TrueOffMyChest", "tifu", "pettyrevenge", "AmItheAsshole"]
+    story = None
+    for sub in subreddits:
+        story = get_top_story(subreddit_name=sub, time_filter="all", min_length=600, max_length=950)
+        if story:
+            break
     
     if not story:
         print("Failed to find a suitable story.")
