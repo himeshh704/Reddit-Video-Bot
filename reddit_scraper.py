@@ -13,7 +13,7 @@ def clean_text(text):
 def get_top_story(subreddit_name="nosleep", time_filter="day", min_length=300, max_length=950):
     """Fetches the top story from a public subreddit without needing API keys."""
     print(f"Fetching top stories from r/{subreddit_name} ({time_filter})...")
-    url = f"https://www.reddit.com/r/{subreddit_name}/top.json?t={time_filter}&limit=25"
+    url = f"https://www.reddit.com/r/{subreddit_name}/top.json?t={time_filter}&limit=100"
     
     # We use a standard web browser User-Agent so Reddit lets us read the public page
     req = urllib.request.Request(

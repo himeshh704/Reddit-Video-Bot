@@ -24,7 +24,7 @@ def main():
         
     # 2. Scrape Story
     print("\n--- STEP 1: Scraping Reddit Story ---")
-    story = get_top_story(subreddit_name="nosleep", time_filter="day", min_length=300, max_length=950) # Approx < 60 seconds
+    story = get_top_story(subreddit_name="shortscarystories", time_filter="week", min_length=300, max_length=950) # Approx < 60 seconds
     
     if not story:
         print("Failed to find a suitable story.")
